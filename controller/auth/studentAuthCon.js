@@ -2,6 +2,7 @@ import asyncHandler from "express-async-handler";
 import Student from "../../models/StudentModel.js";
 import { validationResult } from "express-validator";
 import bcrypt from "bcrypt";
+import { generateToken } from "../../services/auth/generateToken.js";
 
 export const registerStudent = asyncHandler(async (req, res) => {
   // Get the validation result
@@ -22,6 +23,7 @@ export const registerStudent = asyncHandler(async (req, res) => {
   let salt = await bcrypt.genSalt(10);
   let hashPassword = await bcrypt.hash(req.body.password, salt);
   let hashPassword2 = await bcrypt.hash(req.body.confirmPassword, salt);
+  let token = generateToken(req.body._id, req.body.email);
   // If there are no errors, create a new student document with the request body
   const student = new Student({
     username: req.body.username,
@@ -36,6 +38,7 @@ export const registerStudent = asyncHandler(async (req, res) => {
     militaryStatus: req.body.militaryStatus,
     about: req.body.about,
     skills: req.body.skills,
+    token,
   });
   await student.save();
   // Save the student document to the database
@@ -53,5 +56,6 @@ export const registerStudent = asyncHandler(async (req, res) => {
       about: req.body.about,
       skills: req.body.skills,
     },
+    token,
   });
 });
