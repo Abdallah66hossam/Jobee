@@ -1,9 +1,16 @@
 import express from "express";
-import { registerStudent } from "../../controller/auth/studentAuthCon.js";
-import { studentValidation } from "../../services/auth/validations.js";
+import {
+  loginStudent,
+  registerStudent,
+} from "../../controller/auth/studentAuthCon.js";
+import {
+  studentLoginValidation,
+  studentRegisterValidation,
+} from "../../services/auth/validations.js";
 
 const router = express.Router();
 
-router.post("/register", studentValidation, registerStudent);
+router.post("/register", studentRegisterValidation, registerStudent);
+router.post("/login", studentLoginValidation, loginStudent);
 
 export { router as StudentRoute };

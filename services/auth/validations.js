@@ -1,7 +1,7 @@
 import { check } from "express-validator";
 
-// student validation
-export const studentValidation = [
+// student register validation
+export const studentRegisterValidation = [
   check("username")
     .isAlphanumeric()
     .withMessage("Username must contain letters and numbers only")
@@ -67,4 +67,15 @@ export const studentValidation = [
       }
       return true;
     }),
+];
+
+// student login validation
+export const studentLoginValidation = [
+  check("email")
+    .isEmail()
+    .withMessage("Please enter a valid email address!")
+    .trim(),
+  check("password")
+    .isLength({ min: 8 })
+    .withMessage("Password should be at least 8 characters long!"),
 ];

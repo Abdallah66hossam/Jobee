@@ -4,6 +4,12 @@ import { validationResult } from "express-validator";
 import bcrypt from "bcrypt";
 import { generateToken } from "../../services/auth/generateToken.js";
 
+/**-----------------------------------------------
+ * @desc    register User
+ * @route   /api/auth/register
+ * @method  POST
+ * @access  public
+ ------------------------------------------------*/
 export const registerStudent = asyncHandler(async (req, res) => {
   // Get the validation result
   const errors = validationResult(req);
@@ -13,7 +19,7 @@ export const registerStudent = asyncHandler(async (req, res) => {
   }
   let userExist = await Student.findOne({ email: req.body.email });
   if (userExist) {
-    return res.status(500).json({
+    return res.status(400).json({
       status: false,
       errors: [{ msg: `${req.body.email} is already used` }],
     });
@@ -56,6 +62,38 @@ export const registerStudent = asyncHandler(async (req, res) => {
       about: req.body.about,
       skills: req.body.skills,
     },
+    token,
+  });
+});
+
+/**-----------------------------------------------
+ * @desc    Login User
+ * @route   /api/auth/login
+ * @method  POST
+ * @access  public
+ ------------------------------------------------*/
+export const loginStudent = asyncHandler(async (req, res) => {
+  // Get the validation result
+  const errors = validationResult(req);
+  // If there are errors, send a 400 response with the error messages
+  if (!errors.isEmpty()) {
+    return res.status(400).json({ status: false, errors: errors.array() });
+  }
+  const student = await Student.findOne({ email: req.body.email });
+  if (!student) {
+    return res.status(400).json({ message: "invalid email or password" });
+  }
+
+  const isPasswordMatch = await bcrypt.compare(
+    req.body.password,
+    student.password
+  );
+  if (!isPasswordMatch) {
+    return res.status(400).json({ message: "invalid email or password" });
+  }
+  let token = generateToken(req.body.email);
+  res.status(200).json({
+    status: true,
     token,
   });
 });
