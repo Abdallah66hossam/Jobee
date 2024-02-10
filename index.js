@@ -4,6 +4,7 @@ import { connectToDB } from "./config/connectDB.js";
 import cors from "cors";
 import { StudentRoute } from "./routes/auth/student.js";
 import { getStudentRoute } from "./routes/student/getStudent.js";
+import { getTracksRoute } from "./routes/tracks/TracksRoute.js";
 
 // dotenv configuration
 dotenv.config();
@@ -17,6 +18,7 @@ app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+app.use("/api/tracks", getTracksRoute);
 app.use("/api/student/auth", StudentRoute);
 app.use("/api/student", getStudentRoute);
 
