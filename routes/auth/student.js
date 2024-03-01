@@ -11,9 +11,14 @@ import { upload } from "../../config/multer.js";
 
 const router = express.Router();
 
+const uploadFiles = upload.fields([
+  { name: "profileImage", maxCount: 1 },
+  { name: "cv", maxCount: 1 },
+]);
+
 router.post(
   "/register",
-  upload.single("profileImage"),
+  uploadFiles,
   studentRegisterValidation,
   registerStudent
 );

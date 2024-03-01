@@ -12,11 +12,12 @@ import cloudinary from "cloudinary";
  * @access  public
 ------------------------------------------------*/
 export const registerStudent = asyncHandler(async (req, res) => {
-  let result;
+  let profileImage = req.files.profileImage[0];
+  let resultProfile;
   let defaultImage =
     "https://upload.wikimedia.org/wikipedia/commons/thumb/5/59/User-avatar.svg/2048px-User-avatar.svg.png";
-  if (req.file) {
-    result = await cloudinary.v2.uploader.upload(req.file.path);
+  if (profileImage) {
+    resultProfile = await cloudinary.v2.uploader.upload(profileImage.path);
   }
   // Get the validation result
   const errors = validationResult(req);
@@ -31,6 +32,17 @@ export const registerStudent = asyncHandler(async (req, res) => {
       errors: [{ msg: `${req.body.email} is already used` }],
     });
   }
+  if (!req.files.cv) {
+    return res.status(400).json({
+      status: false,
+      errors: [{ msg: "Please Upload your CV" }],
+    });
+  }
+  let resultCV = await cloudinary.v2.uploader.upload(req.files.cv[0].path, {
+    resource_type: "raw",
+    type: "upload",
+    access_mode: "public",
+  });
 
   // hash the password
   let salt = await bcrypt.genSalt(10);
@@ -43,7 +55,7 @@ export const registerStudent = asyncHandler(async (req, res) => {
     email: req.body.email,
     password: hashPassword,
     confirmPassword: hashPassword2,
-    profileImage: result?.secure_url || defaultImage,
+    profileImage: resultProfile?.secure_url || defaultImage,
     age: req.body.age,
     experience: req.body.experience,
     track: req.body.track,
@@ -51,6 +63,7 @@ export const registerStudent = asyncHandler(async (req, res) => {
     militaryStatus: req.body.militaryStatus,
     about: req.body.about,
     skills: req.body.skills,
+    cv: resultCV.secure_url,
     token,
   });
   await student.save();

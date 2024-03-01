@@ -55,6 +55,10 @@ const studentSchema = new Schema({
     type: [String],
     required: true,
   },
+  cv: {
+    type: Object,
+    required: true,
+  },
 });
 
 const Student = model("Student", studentSchema);
