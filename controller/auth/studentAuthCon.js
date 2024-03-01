@@ -36,7 +36,7 @@ export const registerStudent = asyncHandler(async (req, res) => {
     email: req.body.email,
     password: hashPassword,
     confirmPassword: hashPassword2,
-    profileImage: req.body.profileImage,
+    profileImage: req.file.path,
     age: req.body.age,
     experience: req.body.experience,
     track: req.body.track,

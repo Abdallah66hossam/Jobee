@@ -1,16 +1,16 @@
-import { check } from "express-validator";
+import { body, check } from "express-validator";
 
 // student register validation
 export const studentRegisterValidation = [
-  check("username")
+  body("username")
     .isAlphanumeric()
     .withMessage("Username must contain letters and numbers only")
     .trim(),
-  check("email")
+  body("email")
     .isEmail()
     .withMessage("Please enter a valid email address!")
     .trim(),
-  check("password")
+  body("password")
     .isLength({ min: 8 })
     .withMessage("Password should be at least 8 characters long!")
     .custom((value, { req }) => {
@@ -19,17 +19,13 @@ export const studentRegisterValidation = [
       }
       return true;
     }),
-  check("profileImage")
-    .optional()
-    .isURL()
-    .withMessage("Profile image should be a valid URL"),
-  check("age")
+  body("age")
     .isInt({ min: 18, max: 100 })
     .withMessage("Age should be an integer between 18 and 100"),
-  check("experience")
+  body("experience")
     .isInt({ min: 0 })
     .withMessage("Experience should be a non-negative integer"),
-  check("track")
+  body("track")
     .isIn([
       "Frontend",
       "Backend",
@@ -40,23 +36,23 @@ export const studentRegisterValidation = [
       "UX UI",
     ])
     .withMessage("Track should be one of web, mobile, or UX/UI ect.."),
-  check("tracklevel")
+  body("tracklevel")
     .isIn(["Beginner", "Intermediate", "Advanced"])
     .withMessage(
       "Track level should be one of beginner, intermediate, or advanced"
     ),
-  check("militaryStatus")
+  body("militaryStatus")
     .isIn(["exempted", "completed", "postponed", "serving"])
     .withMessage(
       "Military status should be one of exempted, completed, postponed, or serving"
     ),
-  check("about")
+  body("about")
     .isString()
     .withMessage("About should be a string")
     .trim()
     .isLength({ max: 500 })
     .withMessage("About should be no more than 500 characters long"),
-  check("skills")
+  body("skills")
     .isArray()
     .withMessage("Skills is Required")
     .custom((value) => {
