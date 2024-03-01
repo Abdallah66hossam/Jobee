@@ -3,14 +3,27 @@ import Student from "../../models/StudentModel.js";
 import { validationResult } from "express-validator";
 import bcrypt from "bcrypt";
 import { generateToken } from "../../services/auth/generateToken.js";
+import cloudinary from "cloudinary";
+
+cloudinary.v2.config({
+  cloud_name: "deqds3btb",
+  api_key: "869286934598536",
+  api_secret: "rtKfoRHLgEOaMcOTGlbdM2KxZBs",
+});
 
 /**-----------------------------------------------
  * @desc    register User
  * @route   /api/auth/register
  * @method  POST
  * @access  public
- ------------------------------------------------*/
+------------------------------------------------*/
 export const registerStudent = asyncHandler(async (req, res) => {
+  let result;
+  let defaultImage =
+    "https://upload.wikimedia.org/wikipedia/commons/thumb/5/59/User-avatar.svg/2048px-User-avatar.svg.png";
+  if (req.file) {
+    result = await cloudinary.v2.uploader.upload(req.file.path);
+  }
   // Get the validation result
   const errors = validationResult(req);
   // If there are errors, send a 400 response with the error messages
@@ -36,7 +49,7 @@ export const registerStudent = asyncHandler(async (req, res) => {
     email: req.body.email,
     password: hashPassword,
     confirmPassword: hashPassword2,
-    profileImage: req.file.path,
+    profileImage: result?.secure_url || defaultImage,
     age: req.body.age,
     experience: req.body.experience,
     track: req.body.track,
@@ -50,18 +63,7 @@ export const registerStudent = asyncHandler(async (req, res) => {
   // Save the student document to the database
   res.status(201).json({
     status: true,
-    user: {
-      username: req.body.username,
-      email: req.body.email,
-      profileImage: req.body.profileImage,
-      age: req.body.age,
-      experience: req.body.experience,
-      track: req.body.track,
-      tracklevel: req.body.tracklevel,
-      militaryStatus: req.body.militaryStatus,
-      about: req.body.about,
-      skills: req.body.skills,
-    },
+    message: "Student has been registered successfully",
     token,
   });
 });
