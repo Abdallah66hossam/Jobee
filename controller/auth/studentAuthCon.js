@@ -5,12 +5,6 @@ import bcrypt from "bcrypt";
 import { generateToken } from "../../services/auth/generateToken.js";
 import cloudinary from "cloudinary";
 
-cloudinary.v2.config({
-  cloud_name: "deqds3btb",
-  api_key: "869286934598536",
-  api_secret: "rtKfoRHLgEOaMcOTGlbdM2KxZBs",
-});
-
 /**-----------------------------------------------
  * @desc    register User
  * @route   /api/auth/register
@@ -64,6 +58,7 @@ export const registerStudent = asyncHandler(async (req, res) => {
   res.status(201).json({
     status: true,
     message: "Student has been registered successfully",
+    studentId: student._id,
     token,
   });
 });
@@ -96,6 +91,8 @@ export const loginStudent = asyncHandler(async (req, res) => {
   let token = generateToken(req.body.email);
   res.status(200).json({
     status: true,
+    message: "Logged in successfully",
+    studentId: student._id,
     token,
   });
 });
