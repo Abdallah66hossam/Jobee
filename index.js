@@ -6,6 +6,7 @@ import { StudentRoute } from "./routes/auth/student.js";
 import { getStudentRoute } from "./routes/student/getStudent.js";
 import { getTracksRoute } from "./routes/tracks/TracksRoute.js";
 import cloudinary from "cloudinary";
+import { getMilitryRoute } from "./routes/militry/militryServiceRoute.js";
 
 // dotenv configuration
 dotenv.config();
@@ -25,9 +26,10 @@ cloudinary.v2.config({
   api_secret: process.env.CLOUDINARY_API_SECRET,
 });
 
-app.use("/api/tracks", getTracksRoute);
 app.use("/api/student/auth", StudentRoute);
 app.use("/api/student", getStudentRoute);
+app.use("/api/tracks", getTracksRoute);
+app.use("/api/militry", getMilitryRoute);
 
 // listen to server
 app.listen(PORT, () => {
