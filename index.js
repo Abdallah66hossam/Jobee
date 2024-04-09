@@ -3,7 +3,7 @@ import dotenv from "dotenv";
 import { connectToDB } from "./config/connectDB.js";
 import cors from "cors";
 import { StudentRoute } from "./routes/auth/student.js";
-import { getStudentRoute } from "./routes/student/getStudent.js";
+import { getStudentRoute } from "./routes/student/studentRoute.js";
 import { getTracksRoute } from "./routes/tracks/TracksRoute.js";
 import cloudinary from "cloudinary";
 import { getMilitryRoute } from "./routes/militry/militryServiceRoute.js";
