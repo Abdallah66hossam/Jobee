@@ -16,8 +16,8 @@ export const getAllQuestions = asyncHandler(async (req, res) => {
 });
 
 /**-----------------------------------------------
- * @desc    Get all exams
- * @route   /api/exam/all
+ * @desc    Get exam by track
+ * @route   /api/exam
  * @method  GET
  * @access  admin and student
  ------------------------------------------------*/
