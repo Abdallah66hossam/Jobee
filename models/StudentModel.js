@@ -59,6 +59,7 @@ const studentSchema = new Schema({
     type: Object,
     required: true,
   },
+  score: Number,
 });
 
 const Student = model("Student", studentSchema);

@@ -5,7 +5,7 @@ import cloudinary from "cloudinary";
 
 /**-----------------------------------------------
  * @desc    Get Student
- * @route   /api/user
+ * @route   /api/student
  * @method  GET
  * @access  admin and student
  ------------------------------------------------*/
@@ -29,7 +29,7 @@ export const getStudent = asyncHandler(async (req, res) => {
 
 /**-----------------------------------------------
  * @desc    Update Student
- * @route   /api/user
+ * @route   /api/student/:userID
  * @method  PUT
  * @access  admin and student
  ------------------------------------------------*/
@@ -59,5 +59,5 @@ export const updateStudent = asyncHandler(async (req, res) => {
       .status(404)
       .json({ status: false, message: "Student not found" });
   }
-  res.status(200).json(student);
+  res.status(200).json({ status: true, data: student });
 });

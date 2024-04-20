@@ -3,7 +3,7 @@ import {
   getStudent,
   updateStudent,
 } from "../../controller/student/studentCon.js";
-import { verigyToken } from "../../middlewares/verifyToken.js";
+import { verifyToken } from "../../middlewares/verifyToken.js";
 import { upload } from "../../config/multer.js";
 const router = express.Router();
 
@@ -12,7 +12,7 @@ const uploadFiles = upload.fields([
   { name: "cv", maxCount: 1 },
 ]);
 
-router.get("/:userId", verigyToken, getStudent);
-router.put("/:userId", verigyToken, uploadFiles, updateStudent);
+router.get("/:userId", verifyToken, getStudent);
+router.put("/:userId", verifyToken, uploadFiles, updateStudent);
 
 export { router as getStudentRoute };

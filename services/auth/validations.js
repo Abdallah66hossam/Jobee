@@ -35,7 +35,17 @@ export const studentRegisterValidation = [
       "IOS",
       "UX UI",
     ])
-    .withMessage("Track should be one of web, mobile, or UX/UI ect.."),
+    .withMessage(
+      `Track should be one of ${[
+        "Frontend",
+        "Backend",
+        "Flutter",
+        "Data Science",
+        "Android",
+        "IOS",
+        "UX UI",
+      ]}`
+    ),
   body("tracklevel")
     .isIn(["Beginner", "Intermediate", "Advanced"])
     .withMessage(
@@ -74,4 +84,29 @@ export const studentLoginValidation = [
   check("password")
     .isLength({ min: 8 })
     .withMessage("Password should be at least 8 characters long!"),
+];
+
+// create exam validation
+export const createExamValidation = [
+  body("type")
+    .isIn([
+      "Frontend",
+      "Backend",
+      "Flutter",
+      "Data Science",
+      "Android",
+      "IOS",
+      "UX/UI",
+    ])
+    .withMessage(
+      `Track should be one of ${[
+        "Frontend",
+        "Backend",
+        "Flutter",
+        "Data Science",
+        "Android",
+        "IOS",
+        "UX/UI",
+      ]}`
+    ),
 ];
