@@ -8,6 +8,7 @@ import { getTracksRoute } from "./routes/tracks/TracksRoute.js";
 import cloudinary from "cloudinary";
 import { getMilitryRoute } from "./routes/militry/militryServiceRoute.js";
 import { examRoute } from "./routes/exam/examRoute.js";
+import { coursesRoute } from "./routes/courses/coursesRoute.js";
 
 // dotenv configuration
 dotenv.config();
@@ -32,6 +33,7 @@ app.use("/api/student", getStudentRoute);
 app.use("/api/tracks", getTracksRoute);
 app.use("/api/militry", getMilitryRoute);
 app.use("/api/exam", examRoute);
+app.use("/api/courses", coursesRoute);
 
 // listen to server
 app.listen(PORT, () => {

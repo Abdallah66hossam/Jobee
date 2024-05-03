@@ -110,3 +110,29 @@ export const createExamValidation = [
       ]}`
     ),
 ];
+
+// create a course validation
+export const createCourseValidation = [
+  body("title").trim().isLength({ min: 1 }).withMessage("Title is required."),
+  body("description")
+    .trim()
+    .isLength({ min: 1 })
+    .withMessage("Description is required."),
+  body("track").trim().isLength({ min: 1 }).withMessage("Track is required."),
+  body("level").trim().isLength({ min: 1 }).withMessage("Level is required."),
+  body("cost")
+    .isFloat({ gt: 0 })
+    .withMessage("Cost must be a positive number."),
+  body("videos.*.title")
+    .trim()
+    .isLength({ min: 1 })
+    .withMessage("Each video title is required."),
+  body("videos.*.desc")
+    .trim()
+    .isLength({ min: 1 })
+    .withMessage("Each video description is required."),
+  body("videos.*.link")
+    .trim()
+    .isURL()
+    .withMessage("Each video link must be a valid URL."),
+];
