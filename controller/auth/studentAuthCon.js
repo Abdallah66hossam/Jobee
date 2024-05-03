@@ -32,17 +32,16 @@ export const registerStudent = asyncHandler(async (req, res) => {
       errors: [{ msg: `${req.body.email} is already used` }],
     });
   }
-  // if (!req.files.cv) {
-  //   return res.status(400).json({
-  //     status: false,
-  //     errors: [{ msg: "Please Upload your CV" }],
-  //   });
-  // }
-  let resultCV = await cloudinary.v2.uploader.upload(req.files.cv[0].path, {
-    resource_type: "raw",
-    type: "upload",
-    access_mode: "public",
-  });
+  let resultCV;
+  if (!req.files.cv) {
+    console.log("no cv");
+  } else {
+    resultCV = await cloudinary.v2.uploader.upload(req?.files?.cv?.[0].path, {
+      resource_type: "raw",
+      type: "upload",
+      access_mode: "public",
+    });
+  }
 
   // hash the password
   let salt = await bcrypt.genSalt(10);
@@ -63,7 +62,7 @@ export const registerStudent = asyncHandler(async (req, res) => {
     militaryStatus: req.body.militaryStatus,
     about: req.body.about,
     skills: req.body.skills,
-    cv: resultCV.secure_url || "",
+    cv: resultCV ? resultCV.secure_url : "",
     token,
   });
   await student.save();
