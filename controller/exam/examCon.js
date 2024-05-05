@@ -1,5 +1,5 @@
 import asyncHandler from "express-async-handler";
-import { Exam, Question } from "../../models/ExamModel.js";
+import { Exam } from "../../models/ExamModel.js";
 import { validationResult } from "express-validator";
 import jwt from "jsonwebtoken";
 import Student from "../../models/StudentModel.js";
