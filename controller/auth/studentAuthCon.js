@@ -33,7 +33,7 @@ export const registerStudent = asyncHandler(async (req, res) => {
     });
   }
   let resultCV;
-  if (!req.files.cv) {
+  if (!req.files?.cv) {
     console.log("no cv");
   } else {
     resultCV = await cloudinary.v2.uploader.upload(req?.files?.cv?.[0].path, {
