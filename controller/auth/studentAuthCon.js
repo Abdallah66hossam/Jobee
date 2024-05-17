@@ -109,5 +109,6 @@ export const loginStudent = asyncHandler(async (req, res) => {
     message: "Logged in successfully",
     data: student,
     token,
+    rule: "student",
   });
 });
