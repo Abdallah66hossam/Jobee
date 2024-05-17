@@ -29,7 +29,7 @@ export const getExamByTrack = asyncHandler(async (req, res) => {
 
   const exams = await Exam.find({});
 
-  let exam = exams.find((ex) => ex.type == studentTrack);
+  let exam = exams.filter((ex) => ex.type == studentTrack);
   res.status(200).json({ status: true, data: exam });
 });
 
@@ -45,7 +45,11 @@ export const createExam = asyncHandler(async (req, res) => {
     return res.status(400).json({ status: false, errors: errors.array() });
   }
   try {
-    await Exam.create({ type: req.body.type, exam: req.body.exam });
+    await Exam.create({
+      type: req.body.type,
+      exam: req.body.exam,
+      score: 0,
+    });
 
     res
       .status(201)
@@ -66,6 +70,7 @@ export const createExam = asyncHandler(async (req, res) => {
  ------------------------------------------------*/
 export const submitExam = asyncHandler(async (req, res) => {
   const userAnswers = req.body;
+  const examId = req.params.id;
   // get user
   const token = req.headers.authorization.split(" ")[1];
   const decoded = jwt.verify(token, process.env.JWT_SECRET);
@@ -73,9 +78,8 @@ export const submitExam = asyncHandler(async (req, res) => {
   let studentTrack = student.track;
 
   // get all exams and then find the exam by track
-  let allExams = await Exam.find({});
-  let examsByTrack = allExams.find((ex) => ex.type == studentTrack);
-  let examQues = examsByTrack.exam;
+  let examById = await Exam.findById(examId);
+  let examQues = examById.exam;
 
   let score = 0;
   // get the original question, then find the correct option, then compare each other and increase score by 10
@@ -86,7 +90,7 @@ export const submitExam = asyncHandler(async (req, res) => {
       score += 10;
     }
   }
-  student.score = score;
+  student.score += score;
 
   res.status(200).json({
     status: true,

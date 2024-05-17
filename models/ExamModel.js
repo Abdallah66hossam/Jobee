@@ -24,6 +24,10 @@ const questionSchema = Schema({
 const examSchema = Schema({
   type: { type: String, required: true },
   exam: [questionSchema],
+  score: {
+    type: Number,
+    required: true,
+  },
 });
 
 export const Question = model("Question", questionSchema);
