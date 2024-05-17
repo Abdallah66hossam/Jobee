@@ -12,7 +12,9 @@ import cloudinary from "cloudinary";
  * @access  public
 ------------------------------------------------*/
 export const registerStudent = asyncHandler(async (req, res) => {
-  let profileImage = JSON.parse(req.body?.profileImage);
+  let profileImage = req.body.profileImage
+    ? JSON.parse(req.body?.profileImage)
+    : "";
   let resultProfile;
   let defaultImage =
     "https://upload.wikimedia.org/wikipedia/commons/thumb/5/59/User-avatar.svg/2048px-User-avatar.svg.png";

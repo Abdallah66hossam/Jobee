@@ -57,7 +57,6 @@ const studentSchema = new Schema({
   },
   cv: {
     type: String,
-    required: true,
   },
   score: Number,
 });
