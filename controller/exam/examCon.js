@@ -34,14 +34,13 @@ export const getExamByTrack = asyncHandler(async (req, res) => {
 });
 /**-----------------------------------------------
  * @desc    Get exam by id
- * @route   /api/exam
+ * @route   /api/exam/:id
  * @method  GET
  * @access  admin and student
  ------------------------------------------------*/
 export const getExamById = asyncHandler(async (req, res) => {
   let examId = req.params.id;
-  console.log(examId);
-  let exam = await Student.findById(examId);
+  let exam = await Exam.findById(examId);
 
   // let exam = exams.filter((ex) => ex.type == studentTrack);
   res.status(200).json({ status: true, data: exam });

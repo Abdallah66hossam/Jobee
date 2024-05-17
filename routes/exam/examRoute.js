@@ -14,6 +14,6 @@ router.get("/", verifyToken, getExamByTrack);
 router.get("/all", verifyToken, getAllQuestions);
 router.post("/create", verifyToken, createExamValidation, createExam);
 router.post("/submit/:id", verifyToken, submitExam);
-router.post("/:id", verifyToken, getExamById);
+router.get("/:id", verifyToken, getExamById);
 
 export { router as examRoute };
