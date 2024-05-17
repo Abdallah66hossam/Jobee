@@ -32,6 +32,20 @@ export const getExamByTrack = asyncHandler(async (req, res) => {
   let exam = exams.filter((ex) => ex.type == studentTrack);
   res.status(200).json({ status: true, data: exam });
 });
+/**-----------------------------------------------
+ * @desc    Get exam by id
+ * @route   /api/exam
+ * @method  GET
+ * @access  admin and student
+ ------------------------------------------------*/
+export const getExamById = asyncHandler(async (req, res) => {
+  let examId = req.params.id;
+  console.log(examId);
+  let exam = await Student.findById(examId);
+
+  // let exam = exams.filter((ex) => ex.type == studentTrack);
+  res.status(200).json({ status: true, data: exam });
+});
 
 /**-----------------------------------------------
  * @desc    Create exam
@@ -80,7 +94,7 @@ export const submitExam = asyncHandler(async (req, res) => {
   let examById = await Exam.findById(examId);
   let examQues = examById.exam;
 
-  let score = student.score ? student.score : 0;
+  let score = 0;
   // get the original question, then find the correct option, then compare each other and increase score by 10
   for (const question of userAnswers) {
     let origignalQue = examQues.find((que) => que.id == question.que_id);
@@ -97,7 +111,7 @@ export const submitExam = asyncHandler(async (req, res) => {
     status: true,
     data: {
       message: "You have submmited the exam successfully!",
-      score: student.score,
+      score: score,
     },
   });
 });
