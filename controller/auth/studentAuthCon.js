@@ -104,7 +104,7 @@ export const loginStudent = asyncHandler(async (req, res) => {
   res.status(200).json({
     status: true,
     message: "Logged in successfully",
-    studentId: student._id,
+    data: student,
     token,
   });
 });
