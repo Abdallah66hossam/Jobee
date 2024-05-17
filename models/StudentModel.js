@@ -23,7 +23,7 @@ const studentSchema = new Schema({
     required: true,
   },
   profileImage: {
-    type: Object,
+    type: String,
     default:
       "https://upload.wikimedia.org/wikipedia/commons/thumb/5/59/User-avatar.svg/2048px-User-avatar.svg.png",
   },
@@ -56,8 +56,7 @@ const studentSchema = new Schema({
     required: true,
   },
   cv: {
-    type: Object,
-    required: true,
+    type: String,
   },
   score: Number,
 });

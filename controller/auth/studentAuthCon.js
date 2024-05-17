@@ -12,7 +12,9 @@ import cloudinary from "cloudinary";
  * @access  public
 ------------------------------------------------*/
 export const registerStudent = asyncHandler(async (req, res) => {
-  let profileImage = req.files?.profileImage?.[0];
+  let profileImage = req.body.profileImage
+    ? JSON.parse(req.body?.profileImage)
+    : "";
   let resultProfile;
   let defaultImage =
     "https://upload.wikimedia.org/wikipedia/commons/thumb/5/59/User-avatar.svg/2048px-User-avatar.svg.png";
@@ -33,10 +35,11 @@ export const registerStudent = asyncHandler(async (req, res) => {
     });
   }
   let resultCV;
-  if (!req.files?.cv) {
+  if (!req.body?.cv) {
     console.log("no cv");
   } else {
-    resultCV = await cloudinary.v2.uploader.upload(req?.files?.cv?.[0].path, {
+    let cv = JSON.parse(req.body.cv);
+    resultCV = await cloudinary.v2.uploader.upload(cv.path, {
       resource_type: "raw",
       type: "upload",
       access_mode: "public",
@@ -104,7 +107,7 @@ export const loginStudent = asyncHandler(async (req, res) => {
   res.status(200).json({
     status: true,
     message: "Logged in successfully",
-    studentId: student._id,
+    data: student,
     token,
   });
 });

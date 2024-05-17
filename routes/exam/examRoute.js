@@ -12,6 +12,6 @@ const router = express.Router();
 router.get("/", verifyToken, getExamByTrack);
 router.get("/all", verifyToken, getAllQuestions);
 router.post("/create", verifyToken, createExamValidation, createExam);
-router.post("/submit", verifyToken, submitExam);
+router.post("/submit/:id", verifyToken, submitExam);
 
 export { router as examRoute };

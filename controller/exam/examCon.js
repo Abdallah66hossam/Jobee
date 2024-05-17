@@ -24,12 +24,12 @@ export const getAllQuestions = asyncHandler(async (req, res) => {
 export const getExamByTrack = asyncHandler(async (req, res) => {
   const token = req.headers.authorization.split(" ")[1];
   const decoded = jwt.verify(token, process.env.JWT_SECRET);
-  let student = await Student.findOne({ email: decoded._id });
+  let student = await Student.findOne({ email: decoded.email });
   let studentTrack = student.track;
 
   const exams = await Exam.find({});
 
-  let exam = exams.find((ex) => ex.type == studentTrack);
+  let exam = exams.filter((ex) => ex.type == studentTrack);
   res.status(200).json({ status: true, data: exam });
 });
 
@@ -45,7 +45,11 @@ export const createExam = asyncHandler(async (req, res) => {
     return res.status(400).json({ status: false, errors: errors.array() });
   }
   try {
-    await Exam.create({ type: req.body.type, exam: req.body.exam });
+    await Exam.create({
+      type: req.body.type,
+      exam: req.body.exam,
+      score: 0,
+    });
 
     res
       .status(201)
@@ -66,18 +70,17 @@ export const createExam = asyncHandler(async (req, res) => {
  ------------------------------------------------*/
 export const submitExam = asyncHandler(async (req, res) => {
   const userAnswers = req.body;
+  const examId = req.params.id;
   // get user
   const token = req.headers.authorization.split(" ")[1];
   const decoded = jwt.verify(token, process.env.JWT_SECRET);
-  let student = await Student.findOne({ email: decoded._id });
-  let studentTrack = student.track;
+  let student = await Student.findOne({ email: decoded.email });
 
   // get all exams and then find the exam by track
-  let allExams = await Exam.find({});
-  let examsByTrack = allExams.find((ex) => ex.type == studentTrack);
-  let examQues = examsByTrack.exam;
+  let examById = await Exam.findById(examId);
+  let examQues = examById.exam;
 
-  let score = 0;
+  let score = student.score ? student.score : 0;
   // get the original question, then find the correct option, then compare each other and increase score by 10
   for (const question of userAnswers) {
     let origignalQue = examQues.find((que) => que.id == question.que_id);
@@ -86,10 +89,15 @@ export const submitExam = asyncHandler(async (req, res) => {
       score += 10;
     }
   }
-  student.score = score;
+  let newScore = (student.score || 0) + score;
+  await Student.findByIdAndUpdate(student, { score: newScore }, { new: true });
+  await Exam.findByIdAndUpdate(examId, { score: 1 }, { new: true });
 
   res.status(200).json({
     status: true,
-    data: { message: "You have submmited the exam successfully!", score },
+    data: {
+      message: "You have submmited the exam successfully!",
+      score: student.score,
+    },
   });
 });
