@@ -59,6 +59,7 @@ export const createExam = asyncHandler(async (req, res) => {
   }
   try {
     await Exam.create({
+      name: req.body.name,
       type: req.body.type,
       exam: req.body.exam,
       score: 0,
