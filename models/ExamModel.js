@@ -22,6 +22,7 @@ const questionSchema = Schema({
   },
 });
 const examSchema = Schema({
+  name: { type: String, required: true },
   type: { type: String, required: true },
   exam: [questionSchema],
   score: {
