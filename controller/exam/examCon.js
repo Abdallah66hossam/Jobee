@@ -83,7 +83,7 @@ export const createExam = asyncHandler(async (req, res) => {
  * @access  student
  ------------------------------------------------*/
 export const submitExam = asyncHandler(async (req, res) => {
-  const userAnswers = req.body;
+  const userAnswers = req.body.answers;
   const examId = req.params.id;
   // get user
   const token = req.headers.authorization.split(" ")[1];
