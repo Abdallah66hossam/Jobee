@@ -21,12 +21,6 @@ export const registerStudent = asyncHandler(async (req, res) => {
   if (profileImage) {
     resultProfile = await cloudinary.v2.uploader.upload(profileImage.path);
   }
-  // Get the validation result
-  const errors = validationResult(req);
-  // If there are errors, send a 400 response with the error messages
-  if (!errors.isEmpty()) {
-    return res.status(400).json({ status: false, errors: errors.array() });
-  }
   let userExist = await Student.findOne({ email: req.body.email });
   if (userExist) {
     return res.status(400).json({
@@ -85,12 +79,6 @@ export const registerStudent = asyncHandler(async (req, res) => {
  * @access  public
  ------------------------------------------------*/
 export const loginStudent = asyncHandler(async (req, res) => {
-  // Get the validation result
-  const errors = validationResult(req);
-  // If there are errors, send a 400 response with the error messages
-  if (!errors.isEmpty()) {
-    return res.status(400).json({ status: false, errors: errors.array() });
-  }
   const student = await Student.findOne({ email: req.body.email });
   if (!student) {
     return res.status(400).json({ message: "invalid email or password" });

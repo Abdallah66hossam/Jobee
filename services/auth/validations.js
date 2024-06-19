@@ -1,4 +1,12 @@
-import { body, check } from "express-validator";
+import { body, check, validationResult } from "express-validator";
+
+export const validate = (req, res, next) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(400).json({ errors: errors.array() });
+  }
+  next();
+};
 
 // student register validation
 export const studentRegisterValidation = [
@@ -135,4 +143,17 @@ export const createCourseValidation = [
     .trim()
     .isURL()
     .withMessage("Each video link must be a valid URL."),
+];
+
+// create a job validation
+export const jobValidationRules = [
+  check("title").notEmpty().withMessage("Title is required"),
+  check("about").notEmpty().withMessage("About is required"),
+  check("summary").notEmpty().withMessage("Summary is required"),
+  check("requirements").notEmpty().withMessage("Requirements are required"),
+  check("type").notEmpty().withMessage("Type is required"),
+  check("location").notEmpty().withMessage("Location is required"),
+  check("exp").notEmpty().withMessage("Experience is required"),
+  check("salary").isNumeric().withMessage("Salary must be a number"),
+  check("track").notEmpty().withMessage("Track is required"),
 ];

@@ -6,6 +6,7 @@ import {
 import {
   studentLoginValidation,
   studentRegisterValidation,
+  validate,
 } from "../../services/auth/validations.js";
 import { upload } from "../../config/multer.js";
 
@@ -19,9 +20,10 @@ const uploadFiles = upload.fields([
 router.post(
   "/register",
   uploadFiles,
+  validate,
   studentRegisterValidation,
   registerStudent
 );
-router.post("/login", studentLoginValidation, loginStudent);
+router.post("/login", validate, studentLoginValidation, loginStudent);
 
 export { router as StudentRoute };

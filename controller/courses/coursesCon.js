@@ -54,9 +54,9 @@ export const getCourse = asyncHandler(async (req, res) => {
 export const createCourses = asyncHandler(async (req, res) => {
   let data = req.body;
 
-  let courses = await Course.create(data);
+  let course = await Course.create(data);
 
-  if (courses) {
+  if (course) {
     res
       .status(200)
       .json({ status: true, message: "Course has been created succesfully!" });
@@ -96,9 +96,9 @@ export const updateCourses = asyncHandler(async (req, res) => {
 });
 
 /**-----------------------------------------------
- * @desc    Update a course
- * @route   /api/courses/update
- * @method  put
+ * @desc    Dlete a course
+ * @route   /api/courses/dlete
+ * @method  delete
  * @access  admin & mentor
  ------------------------------------------------*/
 export const deleteCourse = asyncHandler(async (req, res) => {
