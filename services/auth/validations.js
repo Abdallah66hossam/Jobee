@@ -157,3 +157,19 @@ export const jobValidationRules = [
   check("salary").isNumeric().withMessage("Salary must be a number"),
   check("track").notEmpty().withMessage("Track is required"),
 ];
+
+// create a post validation
+export const postsValidationRules = [
+  check("content")
+    .isString()
+    .withMessage("Content must be a string")
+    .notEmpty()
+    .withMessage("Content is required"),
+
+  check("img")
+    .optional()
+    .isString()
+    .withMessage("Img must be an string")
+    .notEmpty()
+    .withMessage("Img is required"),
+];

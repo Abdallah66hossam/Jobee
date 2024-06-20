@@ -1,6 +1,5 @@
 import asyncHandler from "express-async-handler";
 import Student from "../../models/StudentModel.js";
-import { validationResult } from "express-validator";
 import bcrypt from "bcrypt";
 import { generateToken } from "../../services/auth/generateToken.js";
 import cloudinary from "cloudinary";
