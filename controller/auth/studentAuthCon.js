@@ -1,6 +1,5 @@
 import asyncHandler from "express-async-handler";
 import Student from "../../models/StudentModel.js";
-import { validationResult } from "express-validator";
 import bcrypt from "bcrypt";
 import { generateToken } from "../../services/auth/generateToken.js";
 import cloudinary from "cloudinary";
@@ -20,12 +19,6 @@ export const registerStudent = asyncHandler(async (req, res) => {
     "https://upload.wikimedia.org/wikipedia/commons/thumb/5/59/User-avatar.svg/2048px-User-avatar.svg.png";
   if (profileImage) {
     resultProfile = await cloudinary.v2.uploader.upload(profileImage.path);
-  }
-  // Get the validation result
-  const errors = validationResult(req);
-  // If there are errors, send a 400 response with the error messages
-  if (!errors.isEmpty()) {
-    return res.status(400).json({ status: false, errors: errors.array() });
   }
   let userExist = await Student.findOne({ email: req.body.email });
   if (userExist) {
@@ -85,12 +78,6 @@ export const registerStudent = asyncHandler(async (req, res) => {
  * @access  public
  ------------------------------------------------*/
 export const loginStudent = asyncHandler(async (req, res) => {
-  // Get the validation result
-  const errors = validationResult(req);
-  // If there are errors, send a 400 response with the error messages
-  if (!errors.isEmpty()) {
-    return res.status(400).json({ status: false, errors: errors.array() });
-  }
   const student = await Student.findOne({ email: req.body.email });
   if (!student) {
     return res.status(400).json({ message: "invalid email or password" });
