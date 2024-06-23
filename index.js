@@ -11,6 +11,8 @@ import { examRoute } from "./routes/exam/examRoute.js";
 import { coursesRoute } from "./routes/courses/coursesRoute.js";
 import { jobsRoute } from "./routes/jobs/jobsRoute.js";
 import { postsRoute } from "./routes/community/postsRoute.js";
+import { likesRoute } from "./routes/community/likesRoute.js";
+import { commentsRoute } from "./routes/community/commentsRoute.js";
 
 // dotenv configuration
 dotenv.config();
@@ -38,6 +40,8 @@ app.use("/api/exam", examRoute);
 app.use("/api/courses", coursesRoute);
 app.use("/api/jobs", jobsRoute);
 app.use("/api/posts", postsRoute);
+app.use("/api/likes", likesRoute);
+app.use("/api/comments", commentsRoute);
 
 // listen to server
 app.listen(PORT, () => {
