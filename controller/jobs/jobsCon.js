@@ -64,7 +64,7 @@ export const getJob = asyncHandler(async (req, res) => {
 /**-----------------------------------------------
  * @desc    Update a job
  * @route   /api/jobs/update/:id
- * @method  Delete
+ * @method  PUT
  * @access  admin and student
  ------------------------------------------------*/
 export const updateJob = asyncHandler(async (req, res) => {

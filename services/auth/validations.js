@@ -165,11 +165,4 @@ export const postsValidationRules = [
     .withMessage("Content must be a string")
     .notEmpty()
     .withMessage("Content is required"),
-
-  check("img")
-    .optional()
-    .isString()
-    .withMessage("Img must be an string")
-    .notEmpty()
-    .withMessage("Img is required"),
 ];

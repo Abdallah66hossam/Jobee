@@ -22,6 +22,10 @@ export const getAllPosts = asyncHandler(async (req, res) => {
  * @access  admin, mentor and student
  ------------------------------------------------*/
 export const createPost = asyncHandler(async (req, res) => {
+  const token = req.headers.authorization.split(" ")[1];
+  const decoded = jwt.verify(token, process.env.JWT_SECRET);
+  let student = await Student.findOne({ email: decoded._id });
+
   let img = req.body?.img;
   let img_url;
 
@@ -38,6 +42,7 @@ export const createPost = asyncHandler(async (req, res) => {
       status: true,
       message: "The Post has been created successfully!",
       data: post,
+      student,
     });
   } else {
     res.status(400).json({
@@ -70,7 +75,7 @@ export const getPost = asyncHandler(async (req, res) => {
 /**-----------------------------------------------
  * @desc    Update a post
  * @route   /api/jobs/update/:id
- * @method  Delete
+ * @method  PUT
  * @access  admin and student
  ------------------------------------------------*/
 export const updatePost = asyncHandler(async (req, res) => {
