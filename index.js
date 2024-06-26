@@ -13,6 +13,7 @@ import { jobsRoute } from "./routes/jobs/jobsRoute.js";
 import { postsRoute } from "./routes/community/postsRoute.js";
 import { likesRoute } from "./routes/community/likesRoute.js";
 import { commentsRoute } from "./routes/community/commentsRoute.js";
+import { CompanyRoute } from "./routes/auth/company.js";
 
 // dotenv configuration
 dotenv.config();
@@ -33,6 +34,7 @@ cloudinary.v2.config({
 });
 
 app.use("/api/student/auth", StudentRoute);
+app.use("/api/company/auth", CompanyRoute);
 app.use("/api/student", getStudentRoute);
 app.use("/api/tracks", getTracksRoute);
 app.use("/api/militry", getMilitryRoute);

@@ -3,6 +3,7 @@ import Student from "../../models/StudentModel.js";
 import bcrypt from "bcrypt";
 import { generateToken } from "../../services/auth/generateToken.js";
 import cloudinary from "cloudinary";
+import Company from "../../models/CompanyModel.js";
 
 /**-----------------------------------------------
  * @desc    register User
@@ -79,23 +80,21 @@ export const registerStudent = asyncHandler(async (req, res) => {
  ------------------------------------------------*/
 export const loginStudent = asyncHandler(async (req, res) => {
   const student = await Student.findOne({ email: req.body.email });
-  if (!student) {
-    return res.status(400).json({ message: "invalid email or password" });
-  }
+  // const mentor = await Student.findOne({ email: req.body.email });
+  const company = await Company.findOne({ email: req.body.email });
 
-  const isPasswordMatch = await bcrypt.compare(
-    req.body.password,
-    student.password
-  );
+  let password = student ? student.password : company.password;
+
+  const isPasswordMatch = await bcrypt.compare(req.body.password, password);
   if (!isPasswordMatch) {
-    return res.status(400).json({ message: "invalid email or password" });
+    return res.status(400).json({ message: "Invalid email or password" });
   }
   let token = generateToken(req.body.email);
   res.status(200).json({
     status: true,
     message: "Logged in successfully",
-    data: student,
+    data: student || company,
     token,
-    rule: "student",
+    rule: student ? "student" : company ? "company" : "mentor",
   });
 });
