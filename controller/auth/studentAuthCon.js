@@ -4,9 +4,10 @@ import bcrypt from "bcrypt";
 import { generateToken } from "../../services/auth/generateToken.js";
 import cloudinary from "cloudinary";
 import Company from "../../models/CompanyModel.js";
+import Mentor from "../../models/MentorModel.js";
 
 /**-----------------------------------------------
- * @desc    register User
+ * @desc    register Student
  * @route   /api/auth/register
  * @method  POST
  * @access  public
@@ -21,8 +22,10 @@ export const registerStudent = asyncHandler(async (req, res) => {
   if (profileImage) {
     resultProfile = await cloudinary.v2.uploader.upload(profileImage.path);
   }
-  let userExist = await Student.findOne({ email: req.body.email });
-  if (userExist) {
+  let studentExist = await Student.findOne({ email: req.body.email });
+  let companyExist = await Company.findOne({ email: req.body.email });
+  let mentorExist = await Mentor.findOne({ email: req.body.email });
+  if (studentExist || mentorExist || companyExist) {
     return res.status(400).json({
       status: false,
       errors: [{ msg: `${req.body.email} is already used` }],
@@ -80,12 +83,22 @@ export const registerStudent = asyncHandler(async (req, res) => {
  ------------------------------------------------*/
 export const loginStudent = asyncHandler(async (req, res) => {
   const student = await Student.findOne({ email: req.body.email });
-  // const mentor = await Student.findOne({ email: req.body.email });
+  const mentor = await Mentor.findOne({ email: req.body.email });
   const company = await Company.findOne({ email: req.body.email });
 
-  let password = student ? student.password : company.password;
+  let password1;
+  if (student) {
+    password1 = student.password;
+  } else if (mentor) {
+    password1 = mentor.password;
+  } else if (company) {
+    password1 = company.password;
+  }
 
-  const isPasswordMatch = await bcrypt.compare(req.body.password, password);
+  const isPasswordMatch = await bcrypt.compare(
+    req.body.password,
+    password1 || ""
+  );
   if (!isPasswordMatch) {
     return res.status(400).json({ message: "Invalid email or password" });
   }
@@ -93,7 +106,7 @@ export const loginStudent = asyncHandler(async (req, res) => {
   res.status(200).json({
     status: true,
     message: "Logged in successfully",
-    data: student || company,
+    data: student || company || mentor,
     token,
     rule: student ? "student" : company ? "company" : "mentor",
   });

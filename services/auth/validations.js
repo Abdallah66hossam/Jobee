@@ -83,6 +83,41 @@ export const studentRegisterValidation = [
     }),
 ];
 
+// company register validation
+export const validateCompany = [
+  check("username").trim().notEmpty().withMessage("Username is required"),
+
+  check("email")
+    .isEmail()
+    .withMessage("Email is not valid")
+    .isLength({ min: 5, max: 100 })
+    .withMessage("Email must be between 5 and 100 characters")
+    .normalizeEmail(),
+
+  check("password").notEmpty().withMessage("Password is required"),
+
+  check("confirmPassword")
+    .notEmpty()
+    .withMessage("Confirm Password is required")
+    .custom((value, { req }) => {
+      if (value !== req.body.password) {
+        throw new Error("Passwords do not match");
+      }
+      return true;
+    }),
+
+  check("profileImage")
+    .optional()
+    .isURL()
+    .withMessage("Profile Image must be a valid URL"),
+
+  check("name").trim().notEmpty().withMessage("Name is required"),
+
+  check("about").trim().notEmpty().withMessage("About is required"),
+
+  check("location").trim().notEmpty().withMessage("Location is required"),
+];
+
 // student login validation
 export const studentLoginValidation = [
   check("email")
