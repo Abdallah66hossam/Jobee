@@ -37,19 +37,14 @@ export const updateStudent = asyncHandler(async (req, res) => {
   const { userId } = req.params;
   const updateData = req.body;
 
-  let profileImage = req.files?.profileImage?.[0];
-  let profileImageResult;
-
+  let profileImage = req.body.profileImage
+    ? JSON.parse(req.body?.profileImage)
+    : "";
+  let resultProfile;
   if (profileImage) {
-    profileImageResult = await cloudinary.v2.uploader.upload(profileImage.path);
+    resultProfile = await cloudinary.v2.uploader.upload(profileImage.path);
   }
-  updateData.profileImage = profileImageResult.secure_url;
-  let resultCV = await cloudinary.v2.uploader.upload(req.files.cv[0].path, {
-    resource_type: "raw",
-    type: "upload",
-    access_mode: "public",
-  });
-  updateData.cv = resultCV.secure_url;
+  updateData.profileImage = resultProfile.secure_url;
 
   const student = await Student.findByIdAndUpdate(userId, updateData, {
     new: true,
