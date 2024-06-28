@@ -3,6 +3,7 @@ import jwt from "jsonwebtoken";
 import Student from "../../models/StudentModel.js";
 import Jobs from "../../models/JobsModel.js";
 import AppliedJobs from "../../models/AppliedJobsModel.js";
+import Company from "../../models/CompanyModel.js";
 
 /**-----------------------------------------------
  * @desc    Get all jobs
@@ -16,7 +17,10 @@ export const getAllJobs = asyncHandler(async (req, res) => {
   let student = await Student.findOne({ email: decoded._id });
   let track = student.track;
 
-  const jobs = await Jobs.find({ track });
+  const jobs = await Jobs.find({ track }).populate(
+    "companyId",
+    "username profileImage"
+  );
   res.status(200).json({ status: true, data: jobs });
 });
 
@@ -28,8 +32,11 @@ export const getAllJobs = asyncHandler(async (req, res) => {
  ------------------------------------------------*/
 export const createJob = asyncHandler(async (req, res) => {
   let data = req.body;
+  const token = req.headers.authorization.split(" ")[1];
+  const decoded = jwt.verify(token, process.env.JWT_SECRET);
+  let comapny = await Company.findOne({ email: decoded._id });
 
-  const job = await Jobs.create(data);
+  const job = await Jobs.create({ ...data, companyId: comapny._id.toString() });
   if (job) {
     res
       .status(200)
@@ -51,7 +58,10 @@ export const createJob = asyncHandler(async (req, res) => {
 export const getJob = asyncHandler(async (req, res) => {
   let id = req.params.id;
 
-  const job = await Jobs.findById(id);
+  const job = await Jobs.findById(id).populate(
+    "companyId",
+    "username profileImage"
+  );
   if (job) {
     res.status(200).json({ status: true, data: job });
   } else {
