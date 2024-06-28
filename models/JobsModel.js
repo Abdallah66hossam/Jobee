@@ -38,6 +38,14 @@ const JobsSchema = new Schema(
       type: String,
       required: true,
     },
+    applied: [
+      {
+        studentId: {
+          ref: "Student",
+          type: Schema.Types.ObjectId,
+        },
+      },
+    ],
   },
   { timestamps: true }
 );

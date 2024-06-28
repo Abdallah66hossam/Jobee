@@ -2,6 +2,7 @@ import asyncHandler from "express-async-handler";
 import jwt from "jsonwebtoken";
 import Student from "../../models/StudentModel.js";
 import Jobs from "../../models/JobsModel.js";
+import AppliedJobs from "../../models/AppliedJobsModel.js";
 
 /**-----------------------------------------------
  * @desc    Get all jobs
@@ -106,6 +107,34 @@ export const deleteJob = asyncHandler(async (req, res) => {
     res.status(400).json({
       status: false,
       message: "An error has been occured while deleting the job!",
+    });
+  }
+});
+
+export const applyForJob = asyncHandler(async (req, res) => {
+  const token = req.headers.authorization.split(" ")[1];
+  const decoded = jwt.verify(token, process.env.JWT_SECRET);
+  let student = await Student.findOne({ email: decoded.email });
+
+  let id = req.params.id;
+
+  let apply = await AppliedJobs.create({
+    ...req.body,
+    studentId: student._id.toString,
+    jobId: id,
+  });
+  const job = await Jobs.findById(id);
+  job.applied.push({ studentId: student._id });
+
+  await job.save();
+  if (job) {
+    res
+      .status(200)
+      .json({ status: true, data: "You have applied to the job succesfully!" });
+  } else {
+    res.status(400).json({
+      status: false,
+      message: "An error has been occured while applying to the job!",
     });
   }
 });
