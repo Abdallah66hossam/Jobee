@@ -31,10 +31,6 @@ export const companySchema = new Schema({
     type: String,
     required: true,
   },
-  about: {
-    type: String,
-    required: true,
-  },
   location: {
     type: String,
     required: true,

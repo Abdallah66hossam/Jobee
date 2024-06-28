@@ -42,7 +42,6 @@ export const registerCompany = asyncHandler(async (req, res) => {
     password: hashPassword,
     confirmPassword: hashPassword2,
     profileImage: resultProfile?.secure_url || defaultImage,
-    about: req.body.about,
     location: req.body.location,
     name: req.body.name,
     token,
