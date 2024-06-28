@@ -5,6 +5,7 @@ import {
 } from "../../services/auth/validations.js";
 import { verifyToken } from "../../middlewares/verifyToken.js";
 import {
+  applyForJob,
   createJob,
   deleteJob,
   getAllJobs,
@@ -18,5 +19,6 @@ router.get("/:id", verifyToken, getJob);
 router.post("/create", verifyToken, jobValidationRules, validate, createJob);
 router.put("/update/:id", verifyToken, updateJob);
 router.delete("/:id", verifyToken, deleteJob);
+router.post("/apply/:id", verifyToken, applyForJob);
 
 export { router as jobsRoute };
