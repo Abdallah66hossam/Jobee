@@ -11,7 +11,9 @@ import cloudinary from "cloudinary";
  * @access  admin, mentor and student
  ------------------------------------------------*/
 export const getAllPosts = asyncHandler(async (req, res) => {
-  const posts = await Posts.find({});
+  const posts = await Posts.find({})
+    .populate("studentId", "username profileImage")
+    .populate("comments.studentId", "username profileImage");
   res.status(200).json({ status: true, data: posts });
 });
 
@@ -24,7 +26,7 @@ export const getAllPosts = asyncHandler(async (req, res) => {
 export const createPost = asyncHandler(async (req, res) => {
   const token = req.headers.authorization.split(" ")[1];
   const decoded = jwt.verify(token, process.env.JWT_SECRET);
-  let student = await Student.findOne({ email: decoded._id });
+  let student = await Student.findOne({ email: decoded.email });
 
   let img = req.body?.img;
   let img_url;
@@ -36,6 +38,7 @@ export const createPost = asyncHandler(async (req, res) => {
   const post = await Posts.create({
     content: req.body.content,
     img: img_url,
+    studentId: student._id.toString(),
   });
   if (post) {
     res.status(201).json({
@@ -61,7 +64,10 @@ export const createPost = asyncHandler(async (req, res) => {
 export const getPost = asyncHandler(async (req, res) => {
   let id = req.params.id;
 
-  const post = await Posts.findById(id);
+  const post = await Posts.findById(id)
+    .populate("studentId", "username profileImage")
+    .populate("comments.studentId", "username profileImage");
+
   if (post) {
     res.status(200).json({ status: true, data: post });
   } else {

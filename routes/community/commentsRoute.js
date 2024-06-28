@@ -1,8 +1,8 @@
 import express from "express";
 import { verifyToken } from "../../middlewares/verifyToken.js";
-import { makeLike } from "../../controller/community/commentCon.js";
+import { makeComment } from "../../controller/community/commentCon.js";
 const router = express.Router();
 
-router.post("/:id", verifyToken, makeLike);
+router.post("/:id", verifyToken, makeComment);
 
 export { router as commentsRoute };
