@@ -113,6 +113,8 @@ export const validateCompany = [
 
   check("name").trim().notEmpty().withMessage("Name is required"),
 
+  check("about").trim().notEmpty().withMessage("About is required"),
+
   check("location").trim().notEmpty().withMessage("Location is required"),
 ];
 

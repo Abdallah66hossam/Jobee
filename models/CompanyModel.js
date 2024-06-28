@@ -35,6 +35,10 @@ export const companySchema = new Schema({
     type: String,
     required: true,
   },
+  about: {
+    type: String,
+    required: true,
+  },
 });
 
 const Company = model("Company", companySchema);

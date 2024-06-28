@@ -44,6 +44,7 @@ export const registerCompany = asyncHandler(async (req, res) => {
     profileImage: resultProfile?.secure_url || defaultImage,
     location: req.body.location,
     name: req.body.name,
+    about: req.body.about,
     token,
   });
   await company.save();
