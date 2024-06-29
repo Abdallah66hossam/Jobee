@@ -18,10 +18,9 @@ export const getAllJobs = asyncHandler(async (req, res) => {
   let student = await Student.findOne({ email: decoded._id });
   let track = student.track;
 
-  const jobs = await Jobs.find({ track }).populate(
-    "companyId",
-    "username profileImage"
-  );
+  const jobs = await Jobs.find({ track })
+    .populate("companyId", "username profileImage")
+    .populate("applied.studentId", "username profileImage");
   res.status(200).json({ status: true, data: jobs });
 });
 
@@ -32,17 +31,29 @@ export const getAllJobs = asyncHandler(async (req, res) => {
  * @access  admin and student
  ------------------------------------------------*/
 export const getCompanyJobs = asyncHandler(async (req, res) => {
-  const token = req.headers.authorization.split(" ")[1];
-  const decoded = jwt.verify(token, process.env.JWT_SECRET);
-  let company = await Company.findOne({ email: decoded._id || decoded.email });
+  try {
+    const token = req.headers.authorization.split(" ")[1];
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
-  Jobs.find({ _id: { $in: company.jobs } })
-    .then((jobs) => {
-      res.status(200).json({ status: true, data: jobs });
-    })
-    .catch((err) => {
-      console.error(err);
+    const company = await Company.findOne({
+      email: decoded._id || decoded.email,
     });
+
+    if (!company) {
+      return res
+        .status(404)
+        .json({ status: false, message: "Company not found" });
+    }
+
+    const jobs = await Jobs.find({ _id: { $in: company.jobs } })
+      .populate("companyId", "username profileImage")
+      .populate("applied.studentId", "username profileImage");
+
+    res.status(200).json({ status: true, data: jobs });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ status: false, message: "Server error" });
+  }
 });
 
 /**-----------------------------------------------
@@ -84,10 +95,9 @@ export const createJob = asyncHandler(async (req, res) => {
 export const getJob = asyncHandler(async (req, res) => {
   let id = req.params.id;
 
-  const job = await Jobs.findById(id).populate(
-    "companyId",
-    "username profileImage"
-  );
+  const job = await Jobs.findById(id)
+    .populate("companyId", "username profileImage")
+    .populate("applied.studentId", "username profileImage");
   if (job) {
     res.status(200).json({ status: true, data: job });
   } else {
