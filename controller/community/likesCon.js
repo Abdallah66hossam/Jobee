@@ -1,5 +1,5 @@
 import asyncHandler from "express-async-handler";
-import jwt from "jsonwebtoken";
+import jwt, { decode } from "jsonwebtoken";
 import Student from "../../models/StudentModel.js";
 import Posts from "../../models/PostsModel.js";
 
@@ -13,7 +13,7 @@ import Posts from "../../models/PostsModel.js";
 export const makeLike = asyncHandler(async (req, res) => {
   const token = req.headers.authorization.split(" ")[1];
   const decoded = jwt.verify(token, process.env.JWT_SECRET);
-  let student = await Student.findOne({ email: decoded._id });
+  let student = await Student.findOne({ email: decoded._id || decoded.email });
 
   let postID = req.params.id;
   let post = await Posts.findById(postID);

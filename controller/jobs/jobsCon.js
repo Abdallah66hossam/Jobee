@@ -4,6 +4,7 @@ import Student from "../../models/StudentModel.js";
 import Jobs from "../../models/JobsModel.js";
 import AppliedJobs from "../../models/AppliedJobsModel.js";
 import Company from "../../models/CompanyModel.js";
+import mongoose from "mongoose";
 
 /**-----------------------------------------------
  * @desc    Get all jobs
@@ -25,6 +26,26 @@ export const getAllJobs = asyncHandler(async (req, res) => {
 });
 
 /**-----------------------------------------------
+ * @desc    Get jobs by company
+ * @route   /api/jobs/company
+ * @method  GET
+ * @access  admin and student
+ ------------------------------------------------*/
+export const getCompanyJobs = asyncHandler(async (req, res) => {
+  const token = req.headers.authorization.split(" ")[1];
+  const decoded = jwt.verify(token, process.env.JWT_SECRET);
+  let company = await Company.findOne({ email: decoded._id || decoded.email });
+
+  Jobs.find({ _id: { $in: company.jobs } })
+    .then((jobs) => {
+      res.status(200).json({ status: true, data: jobs });
+    })
+    .catch((err) => {
+      console.error(err);
+    });
+});
+
+/**-----------------------------------------------
  * @desc    Create a job
  * @route   /api/jobs/create
  * @method  POST
@@ -34,9 +55,14 @@ export const createJob = asyncHandler(async (req, res) => {
   let data = req.body;
   const token = req.headers.authorization.split(" ")[1];
   const decoded = jwt.verify(token, process.env.JWT_SECRET);
-  let comapny = await Company.findOne({ email: decoded._id });
+  let comapny = await Company.findOne({ email: decoded._id || decoded.email });
+  console.log(comapny);
+  let companyId = comapny._id.toString();
 
-  const job = await Jobs.create({ ...data, companyId: comapny._id.toString() });
+  const job = await Jobs.create({ ...data, companyId: companyId });
+  comapny.jobs.push(job._id);
+  await comapny.save();
+
   if (job) {
     res
       .status(200)

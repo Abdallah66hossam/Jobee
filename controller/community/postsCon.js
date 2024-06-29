@@ -26,7 +26,7 @@ export const getAllPosts = asyncHandler(async (req, res) => {
 export const createPost = asyncHandler(async (req, res) => {
   const token = req.headers.authorization.split(" ")[1];
   const decoded = jwt.verify(token, process.env.JWT_SECRET);
-  let student = await Student.findOne({ email: decoded.email });
+  let student = await Student.findOne({ email: decoded._id || decoded.email });
 
   let img = req.body?.img;
   let img_url;
