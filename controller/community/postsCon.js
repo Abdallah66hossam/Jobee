@@ -14,7 +14,7 @@ export const getAllPosts = asyncHandler(async (req, res) => {
   const posts = await Posts.find({})
     .populate("studentId", "username profileImage")
     .populate("comments.studentId", "username profileImage");
-  res.status(200).json({ status: true, data: posts });
+  res.status(200).json({ status: true, data: posts.reverse() });
 });
 
 /**-----------------------------------------------
