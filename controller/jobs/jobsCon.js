@@ -1,5 +1,5 @@
 import asyncHandler from "express-async-handler";
-import jwt from "jsonwebtoken";
+import jwt, { decode } from "jsonwebtoken";
 import Student from "../../models/StudentModel.js";
 import Jobs from "../../models/JobsModel.js";
 import AppliedJobs from "../../models/AppliedJobsModel.js";
@@ -160,7 +160,7 @@ export const deleteJob = asyncHandler(async (req, res) => {
 export const applyForJob = asyncHandler(async (req, res) => {
   const token = req.headers.authorization.split(" ")[1];
   const decoded = jwt.verify(token, process.env.JWT_SECRET);
-  let student = await Student.findOne({ email: decoded.email });
+  let student = await Student.findOne({ email: decoded.email || decoded._id });
 
   let id = req.params.id;
 
