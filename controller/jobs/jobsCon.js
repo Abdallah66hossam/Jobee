@@ -67,7 +67,6 @@ export const createJob = asyncHandler(async (req, res) => {
   const token = req.headers.authorization.split(" ")[1];
   const decoded = jwt.verify(token, process.env.JWT_SECRET);
   let comapny = await Company.findOne({ email: decoded._id || decoded.email });
-  console.log(comapny);
   let companyId = comapny._id.toString();
 
   const job = await Jobs.create({ ...data, companyId: companyId });

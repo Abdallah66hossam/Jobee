@@ -44,6 +44,9 @@ export const mentorSchema = new Schema({
     required: true,
   },
   facebook: String,
+  courses: {
+    type: [String],
+  },
 });
 
 const Mentor = model("Mentor", mentorSchema);

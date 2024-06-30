@@ -4,6 +4,7 @@ import {
   deleteCourse,
   getAllCourses,
   getCourse,
+  getCoursesMentor,
   updateCourses,
 } from "../../controller/courses/coursesCon.js";
 import {
@@ -14,6 +15,7 @@ import { verifyToken } from "../../middlewares/verifyToken.js";
 const router = express.Router();
 
 router.get("/all", verifyToken, getAllCourses);
+router.get("/mentor", verifyToken, getCoursesMentor);
 router.get("/:id", verifyToken, getCourse);
 router.post(
   "/create",

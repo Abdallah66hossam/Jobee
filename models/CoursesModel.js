@@ -41,6 +41,7 @@ const CoursesSchema = new Schema(
       type: [videoSchema],
       required: true,
     },
+    mentorId: String,
   },
   { timestamps: true }
 );
