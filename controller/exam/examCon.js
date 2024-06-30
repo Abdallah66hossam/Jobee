@@ -24,7 +24,7 @@ export const getAllQuestions = asyncHandler(async (req, res) => {
 export const getExamByTrack = asyncHandler(async (req, res) => {
   const token = req.headers.authorization.split(" ")[1];
   const decoded = jwt.verify(token, process.env.JWT_SECRET);
-  let student = await Student.findOne({ email: decoded.email });
+  let student = await Student.findOne({ email: decoded.email || decoded._id });
   let studentTrack = student.track;
 
   const exams = await Exam.find({});
@@ -88,7 +88,7 @@ export const submitExam = asyncHandler(async (req, res) => {
   // get user
   const token = req.headers.authorization.split(" ")[1];
   const decoded = jwt.verify(token, process.env.JWT_SECRET);
-  let student = await Student.findOne({ email: decoded.email });
+  let student = await Student.findOne({ email: decoded.email || decoded._id });
 
   // get all exams and then find the exam by track
   let examById = await Exam.findById(examId);
