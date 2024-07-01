@@ -17,7 +17,9 @@ export const getStudent = asyncHandler(async (req, res) => {
       .json({ status: false, message: "Student not found" });
   }
   const id = new mongoose.Types.ObjectId(userId);
-  const student = await Student.findOne({ _id: id });
+  const student = await Student.findOne({ _id: id })
+    .populate("myJobs")
+    .populate("myCourses");
   if (student) {
     return res.status(200).json({ status: true, student });
   } else {
