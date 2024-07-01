@@ -13,9 +13,7 @@ import Mentor from "../../models/MentorModel.js";
  * @access  public
 ------------------------------------------------*/
 export const registerStudent = asyncHandler(async (req, res) => {
-  let profileImage = req.body.profileImage
-    ? JSON.parse(req.body?.profileImage)
-    : "";
+  let profileImage = req.files.profileImage[0];
   let resultProfile;
   let defaultImage =
     "https://upload.wikimedia.org/wikipedia/commons/thumb/5/59/User-avatar.svg/2048px-User-avatar.svg.png";
@@ -35,8 +33,7 @@ export const registerStudent = asyncHandler(async (req, res) => {
   if (!req.body?.cv) {
     console.log("no cv");
   } else {
-    let cv = JSON.parse(req.body.cv);
-    resultCV = await cloudinary.v2.uploader.upload(cv.path, {
+    let resultCV = await cloudinary.v2.uploader.upload(req.files.cv[0].path, {
       resource_type: "raw",
       type: "upload",
       access_mode: "public",

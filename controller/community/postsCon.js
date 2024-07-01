@@ -3,6 +3,8 @@ import jwt from "jsonwebtoken";
 import Student from "../../models/StudentModel.js";
 import Posts from "../../models/PostsModel.js";
 import cloudinary from "cloudinary";
+import Company from "../../models/CompanyModel.js";
+import Mentor from "../../models/MentorModel.js";
 
 /**-----------------------------------------------
  * @desc    Get all posts
@@ -14,7 +16,7 @@ export const getAllPosts = asyncHandler(async (req, res) => {
   const posts = await Posts.find({})
     .populate("studentId", "username profileImage")
     .populate("comments.studentId", "username profileImage");
-  res.status(200).json({ status: true, data: posts });
+  res.status(200).json({ status: true, data: posts.reverse() });
 });
 
 /**-----------------------------------------------
@@ -27,25 +29,35 @@ export const createPost = asyncHandler(async (req, res) => {
   const token = req.headers.authorization.split(" ")[1];
   const decoded = jwt.verify(token, process.env.JWT_SECRET);
   let student = await Student.findOne({ email: decoded._id || decoded.email });
+  let company = await Company.findOne({ email: decoded._id || decoded.email });
+  let mentor = await Mentor.findOne({ email: decoded._id || decoded.email });
+  let user;
 
-  let img = req.body?.img;
+  if (student) {
+    user = student;
+  } else if (company) {
+    user = company;
+  } else {
+    user = mentor;
+  }
+
+  let img = req.files.img[0];
   let img_url;
 
   if (img) {
-    let parse = JSON.parse(img);
-    img_url = await cloudinary.v2.uploader.upload(parse.path).secure_url;
+    img_url = await cloudinary.v2.uploader.upload(img.path);
   }
   const post = await Posts.create({
     content: req.body.content,
-    img: img_url,
-    studentId: student._id.toString(),
+    img: img_url.secure_url,
+    studentId: user._id.toString(),
   });
   if (post) {
     res.status(201).json({
       status: true,
       message: "The Post has been created successfully!",
       data: post,
-      student,
+      user,
     });
   } else {
     res.status(400).json({

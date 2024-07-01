@@ -6,6 +6,7 @@ import {
 import { verifyToken } from "../../middlewares/verifyToken.js";
 import {
   applyForJob,
+  changeStauts,
   createJob,
   deleteJob,
   getAllJobs,
@@ -13,6 +14,7 @@ import {
   getJob,
   updateJob,
 } from "../../controller/jobs/jobsCon.js";
+import { bookmarkJob } from "../../controller/bookmark/index.js";
 const router = express.Router();
 
 router.get("/all", verifyToken, getAllJobs);
@@ -22,5 +24,7 @@ router.post("/create", verifyToken, jobValidationRules, validate, createJob);
 router.put("/update/:id", verifyToken, updateJob);
 router.delete("/:id", verifyToken, deleteJob);
 router.post("/apply/:id", verifyToken, applyForJob);
+router.post("/bookmark/:id", verifyToken, bookmarkJob);
+router.post("/change-stauts/:id", verifyToken, changeStauts);
 
 export { router as jobsRoute };

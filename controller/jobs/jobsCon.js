@@ -67,7 +67,6 @@ export const createJob = asyncHandler(async (req, res) => {
   const token = req.headers.authorization.split(" ")[1];
   const decoded = jwt.verify(token, process.env.JWT_SECRET);
   let comapny = await Company.findOne({ email: decoded._id || decoded.email });
-  console.log(comapny);
   let companyId = comapny._id.toString();
 
   const job = await Jobs.create({ ...data, companyId: companyId });
@@ -183,4 +182,22 @@ export const applyForJob = asyncHandler(async (req, res) => {
       message: "An error has been occured while applying to the job!",
     });
   }
+});
+
+export const changeStauts = asyncHandler(async (req, res) => {
+  let id = req.params.id;
+  let { answer } = req.body;
+  let student = await Student.findById(id);
+
+  student.status = answer;
+  await student.save();
+
+  res.status(200).json({
+    status: true,
+    message: answer
+      ? "You have accepted the candidate"
+      : "You have rejected the candidate",
+
+    student,
+  });
 });

@@ -1,4 +1,4 @@
-import { model, Schema } from "mongoose";
+import mongoose, { model, Schema } from "mongoose";
 
 export const studentSchema = new Schema({
   username: {
@@ -23,7 +23,7 @@ export const studentSchema = new Schema({
     required: true,
   },
   profileImage: {
-    type: String,
+    type: Object,
     default:
       "https://upload.wikimedia.org/wikipedia/commons/thumb/5/59/User-avatar.svg/2048px-User-avatar.svg.png",
   },
@@ -56,9 +56,15 @@ export const studentSchema = new Schema({
     required: true,
   },
   cv: {
-    type: String,
+    type: Object,
   },
+  myJobs: [{ type: mongoose.Schema.Types.ObjectId, ref: "jobs" }],
+  myCourses: [{ type: mongoose.Schema.Types.ObjectId, ref: "course" }],
   score: Number,
+  status: {
+    type: Boolean,
+    default: false,
+  },
 });
 
 const Student = model("Student", studentSchema);
