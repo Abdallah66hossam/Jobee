@@ -41,16 +41,15 @@ export const createPost = asyncHandler(async (req, res) => {
     user = mentor;
   }
 
-  let img = req.body?.img;
+  let img = req.files.img[0];
   let img_url;
 
   if (img) {
-    let parse = JSON.parse(img);
-    img_url = await cloudinary.v2.uploader.upload(parse.path).secure_url;
+    img_url = await cloudinary.v2.uploader.upload(img.path);
   }
   const post = await Posts.create({
     content: req.body.content,
-    img: img_url,
+    img: img_url.secure_url,
     studentId: user._id.toString(),
   });
   if (post) {

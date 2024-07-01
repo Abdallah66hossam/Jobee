@@ -3,6 +3,7 @@ import Course from "../../models/CoursesModel.js";
 import Student from "../../models/StudentModel.js";
 import jwt from "jsonwebtoken";
 import Mentor from "../../models/MentorModel.js";
+import cloudinary from "cloudinary";
 
 /**-----------------------------------------------
  * @desc    Get all courses
@@ -93,12 +94,21 @@ export const getCourse = asyncHandler(async (req, res) => {
  ------------------------------------------------*/
 export const createCourses = asyncHandler(async (req, res) => {
   let data = req.body;
+  let cover_img = req.files.cover_img[0];
+  let result_img;
+  if (cover_img) {
+    result_img = await cloudinary.v2.uploader.upload(cover_img.path);
+  }
   const token = req.headers.authorization.split(" ")[1];
   const decoded = jwt.verify(token, process.env.JWT_SECRET);
   let mentor = await Mentor.findOne({ email: decoded._id || decoded.email });
   let mentorId = mentor._id.toString();
 
-  let course = await Course.create({ ...data, mentorId });
+  let course = await Course.create({
+    ...data,
+    cover_img: result_img.secure_url || "",
+    mentorId,
+  });
 
   mentor.courses.push(course._id);
   await mentor.save();

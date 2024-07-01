@@ -12,9 +12,7 @@ import Company from "../../models/CompanyModel.js";
  * @access  public
 ------------------------------------------------*/
 export const registerCompany = asyncHandler(async (req, res) => {
-  let profileImage = req.body.profileImage
-    ? JSON.parse(req.body?.profileImage)
-    : "";
+  let profileImage = req.files.profileImage[0];
   let resultProfile;
   let defaultImage =
     "https://upload.wikimedia.org/wikipedia/commons/thumb/5/59/User-avatar.svg/2048px-User-avatar.svg.png";

@@ -5,10 +5,6 @@ const videoSchema = new Schema({
     type: String,
     required: true,
   },
-  desc: {
-    type: String,
-    required: true,
-  },
   link: {
     type: String,
     required: true,
@@ -39,6 +35,14 @@ const CoursesSchema = new Schema(
     },
     videos: {
       type: [videoSchema],
+      required: true,
+    },
+    will_learn: {
+      type: String,
+      required: true,
+    },
+    cover_img: {
+      type: Object,
       required: true,
     },
     mentorId: String,

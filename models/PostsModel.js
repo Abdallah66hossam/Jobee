@@ -7,7 +7,7 @@ const PostsSchema = new Schema(
       required: true,
     },
     img: {
-      type: String,
+      type: Object,
       required: false,
     },
     likes: {
