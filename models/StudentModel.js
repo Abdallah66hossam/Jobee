@@ -61,6 +61,10 @@ export const studentSchema = new Schema({
   myJobs: [{ type: mongoose.Schema.Types.ObjectId, ref: "jobs" }],
   myCourses: [{ type: mongoose.Schema.Types.ObjectId, ref: "course" }],
   score: Number,
+  status: {
+    type: Boolean,
+    default: false,
+  },
 });
 
 const Student = model("Student", studentSchema);

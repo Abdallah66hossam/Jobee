@@ -183,3 +183,21 @@ export const applyForJob = asyncHandler(async (req, res) => {
     });
   }
 });
+
+export const changeStauts = asyncHandler(async (req, res) => {
+  let id = req.params.id;
+  let { answer } = req.body;
+  let student = await Student.findById(id);
+
+  student.status = answer;
+  await student.save();
+
+  res.status(200).json({
+    status: true,
+    message: answer
+      ? "You have accepted the candidate"
+      : "You have rejected the candidate",
+
+    student,
+  });
+});
