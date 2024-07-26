@@ -5,6 +5,7 @@ import { generateToken } from "../../services/auth/generateToken.js";
 import cloudinary from "cloudinary";
 import Company from "../../models/CompanyModel.js";
 import Mentor from "../../models/MentorModel.js";
+import path from "path";
 
 /**-----------------------------------------------
  * @desc    register Student
@@ -30,17 +31,19 @@ export const registerStudent = asyncHandler(async (req, res) => {
     });
   }
   let resultCV;
-  if (!req.body?.cv) {
+  if (!req.files?.cv?.[0]) {
     console.log("no cv");
   } else {
+    let { name, ext } = path.parse(req.files.cv[0].originalname);
     resultCV = await cloudinary.v2.uploader.upload(req.files.cv[0].path, {
       resource_type: "raw",
       type: "upload",
       access_mode: "public",
+      public_id: `cv/${name}`,
     });
   }
 
-  // hash the password
+  // hash the passwordz
   let salt = await bcrypt.genSalt(10);
   let hashPassword = await bcrypt.hash(req.body.password, salt);
   let hashPassword2 = await bcrypt.hash(req.body.confirmPassword, salt);
