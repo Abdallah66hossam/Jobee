@@ -55,9 +55,6 @@ export const studentSchema = new Schema({
     type: [String],
     required: true,
   },
-  cv: {
-    type: Object,
-  },
   myJobs: [{ type: mongoose.Schema.Types.ObjectId, ref: "jobs" }],
   myCourses: [{ type: mongoose.Schema.Types.ObjectId, ref: "course" }],
   score: Number,

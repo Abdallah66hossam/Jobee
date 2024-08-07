@@ -30,18 +30,6 @@ export const registerStudent = asyncHandler(async (req, res) => {
       errors: [{ msg: `${req.body.email} is already used` }],
     });
   }
-  let resultCV;
-  if (!req.files?.cv?.[0]) {
-    console.log("no cv");
-  } else {
-    let { name, ext } = path.parse(req.files.cv[0].originalname);
-    resultCV = await cloudinary.v2.uploader.upload(req.files.cv[0].path, {
-      resource_type: "raw",
-      type: "upload",
-      access_mode: "public",
-      public_id: `cv/${name}`,
-    });
-  }
 
   // hash the passwordz
   let salt = await bcrypt.genSalt(10);
@@ -62,7 +50,6 @@ export const registerStudent = asyncHandler(async (req, res) => {
     militaryStatus: req.body.militaryStatus,
     about: req.body.about,
     skills: req.body.skills,
-    cv: resultCV ? resultCV.secure_url : "",
     token,
   });
   await student.save();
